@@ -1,4 +1,4 @@
-package com.photogalleryapp.model
+package com.photogalleryapp.composable
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -10,12 +10,12 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun PhotoPickerButton(
-    onImagePicked: (Uri?) -> Unit
+    onImagePicked: (List<Uri>?) -> Unit
 ) {
     val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.PickVisualMedia()
-    ) { uri ->
-        onImagePicked(uri)
+        contract = ActivityResultContracts.PickMultipleVisualMedia(10)
+    ) { uris ->
+        onImagePicked(uris)
     }
 
     Button(onClick = {

@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.photogalleryapp.model.PhotoPickerButton
+import com.photogalleryapp.composable.PhotoPickerButton
 import com.photogalleryapp.ui.theme.PhotoGalleryAppTheme
 
 class MainActivity : ComponentActivity() {
