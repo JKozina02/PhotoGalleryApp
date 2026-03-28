@@ -21,10 +21,10 @@ class ViewModel (application: Application) : AndroidViewModel(application) {
     private val mapper = Mapper()
 
     val albums: Flow<List<AlbumObject>> =
-        dao.getAlbums().map { list -> list.map { mapper.fromDbAlbum(it) } }
+        dao.getAlbums().map { list -> list.map { it } }
 
     fun photosFromAlbum(albumId: Int): Flow<List<PhotoObject>> =
-        dao.getPhotosFromAlbum(albumId).map { list -> list.map { mapper.fromDbPhoto(it) } }
+        dao.getPhotosFromAlbum(albumId).map { list -> list.map { it } }
 
     fun insertAlbum(album: AlbumObject) {
         viewModelScope.launch {
