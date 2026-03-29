@@ -14,12 +14,12 @@ import kotlinx.coroutines.flow.Flow
 
 // DB entities - Kotlin Objects
 data class PhotoObject(
-    val id: Int,
+    val id: Int? = null,
     val albumId: Int,
     val uri: Uri
 )
 data class AlbumObject(
-    val id: Int,
+    val id: Int? = null,
     val name: String,
     val color: Color
 )
@@ -56,7 +56,7 @@ class Mapper {
     fun toDbPhoto(photoObject: PhotoObject): Photo
     {
         return Photo(
-            id = photoObject.id,
+            id = photoObject.id ?: 0,
             albumId = photoObject.albumId,
             uri = fromUri(photoObject.uri)
         )
@@ -64,7 +64,7 @@ class Mapper {
     fun fromDbPhoto(photo: Photo): PhotoObject
     {
         return PhotoObject(
-            id = photo.id,
+            id = photo.id ?: 0,
             albumId = photo.albumId,
             uri = toUri(photo.uri)
         )
@@ -72,7 +72,7 @@ class Mapper {
     fun toDbAlbum(albumObject: AlbumObject): Album
     {
         return Album(
-            id = albumObject.id,
+            id = albumObject.id ?: 0,
             name = albumObject.name,
             color = fromColor(albumObject.color)
         )
@@ -91,10 +91,10 @@ class Mapper {
 @Dao
 interface DatabaseDao{
     @Query("SELECT * FROM Album")
-    fun getAlbums(): Flow<List<AlbumObject>>
+    fun getAlbums(): Flow<List<Album>>
 
     @Query("SELECT * FROM Photo WHERE albumId IN (:id)")
-    fun getPhotosFromAlbum(id: Int): Flow<List<PhotoObject>>
+    fun getPhotosFromAlbum(id: Int): Flow<List<Photo>>
 
     @Query("UPDATE Album SET color = :color WHERE id = :id")
     suspend fun updateAlbumColor(id: Int, color: Int)
