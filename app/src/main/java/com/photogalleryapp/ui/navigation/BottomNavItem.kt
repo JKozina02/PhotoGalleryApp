@@ -1,8 +1,8 @@
 package com.photogalleryapp.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Photo
-import androidx.compose.material.icons.filled.PhotoAlbum
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -11,7 +11,7 @@ enum class BottomNavItem (
     val icon: ImageVector,
     val route: String
 ) {
-    Gallery("Galeria", Icons.Default.Photo, "Gallery"),
-    Album("Albumy", Icons.Default.PhotoAlbum, "Albums"),
+    Gallery("Galeria", Icons.Default.Home, "Gallery"),
+    Album("Albumy", Icons.Default.AccountBox, "Albums"),
     Search("Szukaj", Icons.Default.Search, "Search")
 }

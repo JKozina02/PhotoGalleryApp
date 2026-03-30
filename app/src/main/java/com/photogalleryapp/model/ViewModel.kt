@@ -1,8 +1,6 @@
 package com.photogalleryapp.model
 
-import android.app.Application
 import android.content.Context
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -34,8 +32,11 @@ class MainViewModel (
     val albums: Flow<List<AlbumObject>> =
         dao.getAlbums().map { list -> list.map { mapper.fromDbAlbum(it)} }
 
-    fun photosFromAlbum(albumId: Int): Flow<List<PhotoObject>> =
-        dao.getPhotosFromAlbum(albumId).map { list -> list.map { mapper.fromDbPhoto(it)} }
+    fun getAllPhotosFromAlbum(albumId: Int): Flow<List<PhotoObject>> =
+        dao.getAllPhotosFromAlbum(albumId).map { list -> list.map { mapper.fromDbPhoto(it)} }
+
+    fun getPhotosFromAlbum(albumId: Int, count: Int): Flow<List<PhotoObject>> =
+        dao.getPhotosFromAlbum(albumId, count).map { list -> list.map {mapper.fromDbPhoto(it)}}
 
     fun insertAlbum(album: AlbumObject) {
         viewModelScope.launch {

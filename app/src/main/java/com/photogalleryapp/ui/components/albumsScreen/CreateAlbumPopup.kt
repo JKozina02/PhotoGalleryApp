@@ -1,4 +1,4 @@
-package com.photogalleryapp.composable
+package com.photogalleryapp.ui.components.albumsScreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.Label
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -16,13 +15,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.photogalleryapp.model.AlbumObject
-import com.photogalleryapp.model.MainViewModel
-import java.util.jar.Attributes
 
 @Composable
 fun CreateAlbumPopup(
-    onConfirm: (String, Color) -> Unit,
+    onConfirm: (String, Color, Int) -> Unit,
     onDismiss: () -> Unit
 ){
     var albumName by remember {mutableStateOf("")}
@@ -42,9 +38,10 @@ fun CreateAlbumPopup(
                     singleLine = true
                 )
                 Text("Podaj kolor (TODO).")
+                Text("Wybierz ikonę (TODO).")
                 Row() {
                     Button({
-                        onConfirm(albumName, Color.Blue)
+                        onConfirm(albumName, Color.Blue, 0)
                         albumName = ""
                     }){
                         Text("Zapisz")

@@ -1,4 +1,4 @@
-package com.photogalleryapp.ui.components
+package com.photogalleryapp.ui.components.shared
 
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable

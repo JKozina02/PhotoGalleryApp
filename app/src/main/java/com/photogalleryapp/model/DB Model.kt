@@ -2,6 +2,7 @@ package com.photogalleryapp.model
 
 import android.net.Uri
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -21,15 +22,17 @@ data class PhotoObject(
 data class AlbumObject(
     val id: Int? = null,
     val name: String,
-    val color: Color
+    val color: Color,
+    val iconID: Int
 )
 
 // DB Entities
 @Entity
 data class Album(
-    @PrimaryKey(autoGenerate = true)val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val name: String,
-    val color: Int
+    val color: Int,
+    val iconID: Int
 )
 
 
@@ -50,7 +53,7 @@ data class Photo(
 class Mapper {
     fun fromUri(uri: Uri): String = uri.toString()
     fun toUri(string: String): Uri = Uri.parse(string)
-    fun fromColor(color: Color): Int = color.value.toInt()
+    fun fromColor(color: Color): Int = color.toArgb()
     fun toColor(value: Int): Color = Color(value)
 
     fun toDbPhoto(photoObject: PhotoObject): Photo
@@ -74,7 +77,8 @@ class Mapper {
         return Album(
             id = albumObject.id ?: 0,
             name = albumObject.name,
-            color = fromColor(albumObject.color)
+            color = fromColor(albumObject.color),
+            iconID = albumObject.iconID
         )
     }
     fun fromDbAlbum(album: Album): AlbumObject
@@ -82,7 +86,8 @@ class Mapper {
         return AlbumObject(
             id = album.id,
             name = album.name,
-            color = toColor(album.color)
+            color = toColor(album.color),
+            iconID = album.iconID
         )
     }
 }
@@ -93,8 +98,11 @@ interface DatabaseDao{
     @Query("SELECT * FROM Album")
     fun getAlbums(): Flow<List<Album>>
 
-    @Query("SELECT * FROM Photo WHERE albumId IN (:id)")
-    fun getPhotosFromAlbum(id: Int): Flow<List<Photo>>
+    @Query("SELECT * FROM Photo WHERE albumId IN (:albumID)")
+    fun getAllPhotosFromAlbum(albumID: Int): Flow<List<Photo>>
+
+    @Query("SELECT * FROM Photo WHERE albumId IN (:albumID) LIMIT (:count)")
+    fun getPhotosFromAlbum(albumID: Int, count: Int): Flow<List<Photo>>
 
     @Query("UPDATE Album SET color = :color WHERE id = :id")
     suspend fun updateAlbumColor(id: Int, color: Int)

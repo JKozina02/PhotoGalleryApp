@@ -1,4 +1,4 @@
-package com.photogalleryapp.composable
+package com.photogalleryapp.ui.components.shared
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
