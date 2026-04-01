@@ -1,8 +1,9 @@
 package com.photogalleryapp.ui.components.albumsScreen
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,11 +29,13 @@ import com.photogalleryapp.model.AlbumObject
 import com.photogalleryapp.model.IconRegistry
 import com.photogalleryapp.model.testAlbum1
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AlbumPreviewComponent(
     album: AlbumObject,
     isOpen: Boolean,
-    onClick: (album: AlbumObject) -> Unit
+    onClick: (album: AlbumObject) -> Unit,
+    onLongClick: (album: AlbumObject) -> Unit
     )
 {
     val iconRegistry = IconRegistry
@@ -41,7 +44,14 @@ fun AlbumPreviewComponent(
             .clip(RoundedCornerShape(32.dp))
             .fillMaxWidth()
             .background(Color.Gray)
-            .clickable{ onClick(album) }
+            .combinedClickable(
+                onClick = {
+                    onClick(album)
+                },
+                onLongClick = {
+                    onLongClick(album)
+                }
+            )
             .animateContentSize()
     ){
         Column() {
@@ -99,14 +109,14 @@ fun AlbumTopBar(
 @Preview
 fun PreviewHorizontal()
 {
-    AlbumPreviewComponent(testAlbum0, true, {})
+    AlbumPreviewComponent(testAlbum0, true, {}, {})
 }
 
 @Composable
 @Preview
 fun PreviewVertical()
 {
-    AlbumPreviewComponent(testAlbum1, false, {})
+    AlbumPreviewComponent(testAlbum1, false, {}, {})
 }
 
 

@@ -1,6 +1,7 @@
 package com.photogalleryapp.model
 
 import android.content.Context
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -53,6 +54,20 @@ class MainViewModel (
     fun updateAlbumColor(id: Int, color: Int) {
         viewModelScope.launch {
             dao.updateAlbumColor(id, color)
+        }
+    }
+
+    fun updateAlbumColor(id: Int, color: Color) {
+        val colorInt = mapper.fromColor(color)
+
+        viewModelScope.launch {
+            dao.updateAlbumColor(id, colorInt)
+        }
+    }
+
+    fun updateAlbumIcon(id: Int, icon: Int) {
+        viewModelScope.launch {
+            dao.updateAlbumIcon(id, icon)
         }
     }
 

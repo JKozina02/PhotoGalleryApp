@@ -110,6 +110,9 @@ interface DatabaseDao{
     @Query("UPDATE Album SET name = :name WHERE id = :id")
     suspend fun updateAlbumName(id: Int, name: String)
 
+    @Query("UPDATE Album SET iconID = :icon WHERE id = :id")
+    suspend fun updateAlbumIcon(id: Int, icon: Int)
+
     @Query("DELETE FROM Album WHERE id = :id")
     suspend fun deleteAlbumById(id: Int)
 
