@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,26 +23,38 @@ import com.photogalleryapp.ui.components.shared.AlbumEditorPopup
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AlbumsGrid(albumsFlow: Flow<List<AlbumObject>>, view: MainViewModel){
+fun AlbumsGrid(
+    albumsFlow: Flow<List<AlbumObject>>,
+    view: MainViewModel,
+    onAlbumClick: (AlbumObject) -> Unit
+){
     val albums = albumsFlow.collectAsState(initial = emptyList())
-    val selectedAlbum = remember { mutableStateOf<AlbumObject?>(null) }
+    var selectedAlbum by remember { mutableStateOf<AlbumObject?>(null) }
 
     var showAlbumEditModal by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(1),
         modifier = Modifier.padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(2.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(albums.value){ album ->
             AlbumPreviewComponent(
                 album = album,
-                isOpen = album == selectedAlbum.value,
+                isOpen = album == selectedAlbum,
+                viewModel = view,
                 onClick = {
-                    selectedAlbum.value = album
+                    if (selectedAlbum == album) {
+                        onAlbumClick(album)
+                    } else {
+                        selectedAlbum = album
+                    }
                 },
                 onLongClick = {
-                    selectedAlbum.value = album
+                    selectedAlbum = album
                     showAlbumEditModal = true
                 }
             )
@@ -53,9 +66,10 @@ fun AlbumsGrid(albumsFlow: Flow<List<AlbumObject>>, view: MainViewModel){
         ModalBottomSheet(
             onDismissRequest =  {
                 showAlbumEditModal = false
-            }
+            },
+            sheetState = sheetState
         ) {
-            selectedAlbum.value?.let { album ->
+            selectedAlbum?.let { album ->
                 AlbumEditorPopup(
                     album = album,
                     onDismissRequest = { showAlbumEditModal = false },

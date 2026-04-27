@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -49,7 +50,9 @@ fun AlbumEditorPopup(
     var draft by remember { mutableStateOf(album) }
 
     Column(
-        modifier = Modifier.padding(horizontal = 16.dp)
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
     ) {
         Column(
             modifier = Modifier.padding(bottom = 8.dp)
@@ -59,7 +62,9 @@ fun AlbumEditorPopup(
             OutlinedTextField(
                 value = draft.name,
                 onValueChange = { draft = draft.copy(name = it) },
+                label = { Text("Album Name") },
                 modifier = Modifier.fillMaxWidth(),
+                singleLine = true
             )
         }
 
@@ -91,7 +96,8 @@ fun AlbumEditorPopup(
                 )
 
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(6)
+                    columns = GridCells.Fixed(6),
+                    modifier = Modifier.heightIn(max = 200.dp)
                 ) {
                     items(icons.icons.entries.toList()) { iconEntry ->
                         val isSelected = draft.iconID == iconEntry.key
@@ -103,10 +109,11 @@ fun AlbumEditorPopup(
                                 .size(48.dp)
                                 .clickable { draft = draft.copy(iconID = iconEntry.key) }
                                 .background(
-                                    if (isSelected) Color.Gray
+                                    if (isSelected) Color.LightGray
                                     else Color.Transparent
                                 )
-                                .clip(CircleShape),
+                                .clip(CircleShape)
+                                .padding(8.dp),
                             tint = Color.Black
                         )
                     }
@@ -117,15 +124,16 @@ fun AlbumEditorPopup(
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
         ) {
             Button(
-                onClick = { onDismissRequest() }
+                onClick = onDismissRequest
             ) {
-                Text("Back")
+                Text("Cancel")
             }
             Button(
-                onClick = { onSaveRequest(draft) }
+                onClick = { onSaveRequest(draft) },
+                enabled = draft.name.isNotBlank()
             ) {
                 Text("Save")
             }
@@ -138,14 +146,16 @@ fun HorizontalDividerWithSubhead(
     text: String
 ) {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(vertical = 8.dp)
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.padding(end = 8.dp)
         )
-        HorizontalDivider()
+        HorizontalDivider(modifier = Modifier.weight(1f))
     }
 
 }
@@ -156,8 +166,6 @@ fun HorizontalDividerWithSubhead(
 fun PreviewAlbumEditorPopup() {
     var album = testAlbum0
     ModalBottomSheet(onDismissRequest = { }) {
-    Text(album.iconID.toString())
-
         AlbumEditorPopup(
             album,
             { },
