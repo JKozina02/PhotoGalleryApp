@@ -80,6 +80,7 @@ fun AlbumEditorPopup(
                 )
 
                 GridColorPicker(
+                    lastSelectedColor = draft.color,
                     onColorSelected = {
                         draft = draft.copy(color = it)
                     },

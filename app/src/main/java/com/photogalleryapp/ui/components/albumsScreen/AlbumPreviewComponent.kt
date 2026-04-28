@@ -63,7 +63,7 @@ fun AlbumPreviewComponent(
 
     Box(
         modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
+            .padding(vertical = 4.dp) // Usunięto horizontal padding
             .clip(RoundedCornerShape(32.dp))
             .fillMaxWidth()
             .height(animatedHeight)

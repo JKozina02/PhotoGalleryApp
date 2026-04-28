@@ -22,7 +22,14 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier, mainViewMo
     ) {
         composable(BottomNavItem.Gallery.route) { GalleryScreen() }
         composable(BottomNavItem.Album.route) { AlbumsScreen(mainViewModel, navController) }
-        composable(BottomNavItem.Search.route) { SearchScreen() }
+        composable(BottomNavItem.Search.route) {
+            SearchScreen(
+                viewModel = mainViewModel,
+                onAlbumClick = { album ->
+                    navController.navigate("AlbumContents/${album.id}")
+                }
+            )
+        }
         composable(
             route = "AlbumContents/{albumId}",
             arguments = listOf(navArgument("albumId") { type = NavType.IntType })
