@@ -54,7 +54,6 @@ fun AlbumPreviewComponent(
     val photos by viewModel.getPhotosFromAlbum(album.id ?: 0, 5).collectAsState(initial = emptyList())
     val firstPhoto = photos.firstOrNull()
 
-    // 1. Jawna animacja wysokości całego kafelka
     val animatedHeight by animateDpAsState(
         targetValue = if (isOpen) 350.dp else 120.dp,
         animationSpec = tween(durationMillis = 350),
@@ -63,7 +62,7 @@ fun AlbumPreviewComponent(
 
     Box(
         modifier = Modifier
-            .padding(vertical = 4.dp) // Usunięto horizontal padding
+            .padding(vertical = 4.dp)
             .clip(RoundedCornerShape(32.dp))
             .fillMaxWidth()
             .height(animatedHeight)
@@ -73,7 +72,6 @@ fun AlbumPreviewComponent(
                 onLongClick = { onLongClick(album) }
             )
     ) {
-        // 2. AnimatedContent zapewnia płynne przejście tła (zdjęcie -> karuzela)
         AnimatedContent(
             targetState = isOpen,
             transitionSpec = {
@@ -109,7 +107,6 @@ fun AlbumPreviewComponent(
             }
         }
 
-        // 3. Nakładka z animowanym paskiem górnym
         AlbumTopBar(
             albumName = album.name,
             albumColor = album.color,

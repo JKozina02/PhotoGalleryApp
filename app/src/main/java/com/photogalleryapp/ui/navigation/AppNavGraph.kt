@@ -12,14 +12,16 @@ import com.photogalleryapp.ui.screens.AlbumsScreen
 import com.photogalleryapp.ui.screens.GalleryScreen
 import com.photogalleryapp.ui.screens.SearchScreen
 import com.photogalleryapp.ui.screens.AlbumContentsScreen
+import com.photogalleryapp.ui.screens.LoginScreen
 
 @Composable
 fun AppNavGraph(navController: NavHostController, modifier: Modifier, mainViewModel: MainViewModel) {
     NavHost(
         navController = navController,
-        startDestination = BottomNavItem.Gallery.route,
+        startDestination = "Login",
         modifier = modifier
     ) {
+        composable("Login") { LoginScreen() }
         composable(BottomNavItem.Gallery.route) { GalleryScreen() }
         composable(BottomNavItem.Album.route) { AlbumsScreen(mainViewModel, navController) }
         composable(BottomNavItem.Search.route) {

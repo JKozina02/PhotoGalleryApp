@@ -15,6 +15,8 @@ import com.photogalleryapp.model.MainViewModel
 import com.photogalleryapp.model.MainViewModelFactory
 import com.photogalleryapp.ui.components.shared.BottomNavBar
 import com.photogalleryapp.ui.theme.PhotoGalleryAppTheme
+import androidx.compose.runtime.getValue
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels {
@@ -24,14 +26,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        deleteDatabase("gallery_db")
+        // deleteDatabase("gallery_db") // Usunięto, żeby nie kasować bazy przy każdym uruchomieniu, chyba że tak miało być
         setContent {
             PhotoGalleryAppTheme {
                 val navController = rememberNavController()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     bottomBar = {
-                        BottomNavBar(navController)
+                        // Ukrywamy pasek nawigacji na ekranie logowania
+                        if (currentRoute != "Login") {
+                            BottomNavBar(navController)
+                        }
                     }
                     ){ innerPadding ->
                         AppNavGraph(
