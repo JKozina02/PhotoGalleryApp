@@ -21,7 +21,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier, mainViewMo
         startDestination = "Login",
         modifier = modifier
     ) {
-        composable("Login") { LoginScreen() }
+        composable("Login") { LoginScreen(navController) }
         composable(BottomNavItem.Gallery.route) { GalleryScreen() }
         composable(BottomNavItem.Album.route) { AlbumsScreen(mainViewModel, navController) }
         composable(BottomNavItem.Search.route) {

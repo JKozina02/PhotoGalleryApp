@@ -50,8 +50,13 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
     implementation(libs.kv.color.picker)
-    implementation(libs.retrofit)
+    
+    // Retrofit & OkHttp
+    implementation(libs.retrofit.main)
     implementation(libs.retrofit.gson)
+    implementation(libs.okhttp.main)
+    implementation(libs.okhttp.logging)
+
     ksp(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
