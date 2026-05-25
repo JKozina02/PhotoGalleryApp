@@ -20,7 +20,7 @@ fun AppNavGraph(navController: NavHostController, modifier: Modifier, mainViewMo
         startDestination = BottomNavItem.Gallery.route,
         modifier = modifier
     ) {
-        composable(BottomNavItem.Gallery.route) { GalleryScreen() }
+        composable(BottomNavItem.Gallery.route) { GalleryScreen(mainViewModel) }
         composable(BottomNavItem.Album.route) { AlbumsScreen(mainViewModel, navController) }
         composable(BottomNavItem.Search.route) {
             SearchScreen(

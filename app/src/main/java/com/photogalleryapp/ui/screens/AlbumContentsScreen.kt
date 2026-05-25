@@ -22,6 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import androidx.compose.ui.res.stringResource
+import com.photogalleryapp.R
 import com.photogalleryapp.model.MainViewModel
 import com.photogalleryapp.model.PhotoObject
 import java.io.File
@@ -61,7 +63,7 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Album $albumId") },
+                title = { Text(stringResource(R.string.album_title_template, albumId ?: 0)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(

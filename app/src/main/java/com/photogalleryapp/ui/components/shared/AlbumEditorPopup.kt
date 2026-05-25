@@ -36,6 +36,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.kavi.droid.color.picker.ui.pickers.GridColorPicker
+import androidx.compose.ui.res.stringResource
+import com.photogalleryapp.R
 import com.photogalleryapp.model.AlbumObject
 import com.photogalleryapp.model.IconRegistry
 import com.photogalleryapp.model.testAlbum0
@@ -57,12 +59,12 @@ fun AlbumEditorPopup(
         Column(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
-            HorizontalDividerWithSubhead("Name")
+            HorizontalDividerWithSubhead(stringResource(R.string.name_label))
 
             OutlinedTextField(
                 value = draft.name,
                 onValueChange = { draft = draft.copy(name = it) },
-                label = { Text("Album Name") },
+                label = { Text(stringResource(R.string.album_name_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -71,11 +73,11 @@ fun AlbumEditorPopup(
         Column(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
-            HorizontalDividerWithSubhead("Appearance")
+            HorizontalDividerWithSubhead(stringResource(R.string.appearance_label))
 
             Column {
                 Text(
-                    "Highlight Color:",
+                    stringResource(R.string.highlight_color),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -92,7 +94,7 @@ fun AlbumEditorPopup(
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 Text(
-                    "Icon:",
+                    stringResource(R.string.icon_label),
                     fontWeight = FontWeight.Bold
                 )
 
@@ -130,13 +132,13 @@ fun AlbumEditorPopup(
             Button(
                 onClick = onDismissRequest
             ) {
-                Text("Cancel")
+                Text(stringResource(R.string.cancel))
             }
             Button(
                 onClick = { onSaveRequest(draft) },
                 enabled = draft.name.isNotBlank()
             ) {
-                Text("Save")
+                Text(stringResource(R.string.save_button))
             }
         }
     }

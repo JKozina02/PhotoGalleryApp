@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">PhotoGalleryApp</string>
+    <string name="create_text">Dodaj</string>
+    <string name="change_language">Zmień język</string>
+    <string name="add_album">Dodaj album</string>
+    <string name="gallery">Galeria</string>
+    <string name="search_placeholder">Szukaj albumu...</string>
+    <string name="clear_search">Wyczyść wyszukiwanie</string>
+    <string name="filter">Filtruj</string>
+    <string name="no_albums_found">Nie znaleziono albumów</string>
+    <string name="filter_by_icon">Filtruj po ikonie</string>
+    <string name="all_icons">Wszystkie</string>
+    <string name="cancel">Anuluj</string>
+    <string name="album_title_template">Album %1$d</string>
+    <string name="name_label">Nazwa</string>
+    <string name="album_name_label">Nazwa albumu</string>
+    <string name="appearance_label">Wygląd</string>
+    <string name="highlight_color">Kolor wyróżnienia:</string>
+    <string name="icon_label">Ikona:</string>
+    <string name="create_button">Stwórz</string>
+    <string name="save_button">Zapisz</string>
+    <string name="albums_tab">Albumy</string>
+    <string name="search_tab">Szukaj</string>
 </resources>

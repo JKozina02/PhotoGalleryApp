@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.res.stringResource
+import com.photogalleryapp.R
 import com.photogalleryapp.model.AlbumObject
 import com.photogalleryapp.model.IconRegistry
 import com.photogalleryapp.model.MainViewModel
@@ -55,12 +57,12 @@ fun SearchScreen(viewModel: MainViewModel, onAlbumClick: (AlbumObject) -> Unit) 
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Szukaj albumu...") },
+                placeholder = { Text(stringResource(R.string.search_placeholder)) },
                 leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
                 trailingIcon = {
                     if (searchQuery.isNotEmpty()) {
                         IconButton(onClick = { searchQuery = "" }) {
-                            Icon(Icons.Default.Clear, contentDescription = "Clear search")
+                            Icon(Icons.Default.Clear, contentDescription = stringResource(R.string.clear_search))
                         }
                     }
                 },
@@ -77,7 +79,7 @@ fun SearchScreen(viewModel: MainViewModel, onAlbumClick: (AlbumObject) -> Unit) 
                         containerColor = if (selectedIconId != null) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
                     )
                 ) {
-                    Icon(Icons.Default.FilterList, contentDescription = "Filtruj")
+                    Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.filter))
                 }
             }
         }
@@ -86,7 +88,7 @@ fun SearchScreen(viewModel: MainViewModel, onAlbumClick: (AlbumObject) -> Unit) 
 
         if (filteredAlbums.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nie znaleziono albumów", style = MaterialTheme.typography.bodyLarge)
+                Text(stringResource(R.string.no_albums_found), style = MaterialTheme.typography.bodyLarge)
             }
         } else {
             val filteredFlow = remember(filteredAlbums) {
@@ -131,7 +133,7 @@ fun IconFilterDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Filtruj po ikonie",
+                    stringResource(R.string.filter_by_icon),
                     style = MaterialTheme.typography.titleLarge,
                     modifier = Modifier.padding(bottom = 16.dp)
                 )
@@ -148,7 +150,7 @@ fun IconFilterDialog(
                     item {
                         FilterIconItem(
                             icon = Icons.Default.Clear,
-                            label = "Wszystkie",
+                            label = stringResource(R.string.all_icons),
                             isSelected = selectedIconId == null,
                             onClick = { onIconSelected(null) }
                         )
@@ -168,7 +170,7 @@ fun IconFilterDialog(
                     onClick = onDismiss,
                     modifier = Modifier.align(Alignment.End)
                 ) {
-                    Text("Anuluj")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         }

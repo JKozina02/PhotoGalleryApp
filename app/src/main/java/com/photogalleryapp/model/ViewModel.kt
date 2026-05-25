@@ -1,7 +1,9 @@
 package com.photogalleryapp.model
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.Color
+import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -28,6 +30,24 @@ class MainViewModelFactory (private val context: Context): ViewModelProvider.Fac
 class MainViewModel (
     private val dao: DatabaseDao
 ) : ViewModel() {
+
+    fun getCurrentLanguage(): String {
+        val locales = AppCompatDelegate.getApplicationLocales()
+        if (!locales.isEmpty) {
+            val tag = locales[0]?.toLanguageTag() ?: "pl"
+            android.util.Log.d("MainViewModel", "Current locale tag: $tag")
+            return tag.substringBefore("-")
+        }
+        val def = java.util.Locale.getDefault().language
+        android.util.Log.d("MainViewModel", "Current default language: $def")
+        return def.substringBefore("-")
+    }
+
+    fun setLanguage(languageCode: String) {
+        android.util.Log.d("MainViewModel", "Setting language to: $languageCode")
+        val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
+        AppCompatDelegate.setApplicationLocales(appLocale)
+    }
     private val mapper = Mapper()
 
     val albums: Flow<List<AlbumObject>> =

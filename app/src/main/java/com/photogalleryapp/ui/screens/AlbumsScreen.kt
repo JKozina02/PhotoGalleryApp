@@ -15,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.compose.ui.res.stringResource
+import com.photogalleryapp.R
 import com.photogalleryapp.ui.components.albumsScreen.AlbumsGrid
 import com.photogalleryapp.ui.components.albumsScreen.CreateAlbumPopup
 import com.photogalleryapp.model.AlbumObject
@@ -46,7 +48,7 @@ fun AlbumsScreen(viewModel: MainViewModel, navController: NavHostController) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 16.dp)
         ) {
-            Text("Dodaj album")
+            Text(stringResource(R.string.add_album))
         }
     }
 
