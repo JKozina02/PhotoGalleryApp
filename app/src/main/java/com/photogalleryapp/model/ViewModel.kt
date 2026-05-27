@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.room.Room
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -31,6 +33,15 @@ class MainViewModel (
     private val dao: DatabaseDao
 ) : ViewModel() {
 
+    // Dark Theme
+    private val _isDarkTheme = MutableStateFlow(false)
+    val isDarkTheme: StateFlow<Boolean> = _isDarkTheme
+
+    fun changeDarkTheme() {
+        _isDarkTheme.value = !_isDarkTheme.value
+    }
+
+    // Language
     fun getCurrentLanguage(): String {
         val locales = AppCompatDelegate.getApplicationLocales()
         if (!locales.isEmpty) {
@@ -48,10 +59,15 @@ class MainViewModel (
         val appLocale: LocaleListCompat = LocaleListCompat.forLanguageTags(languageCode)
         AppCompatDelegate.setApplicationLocales(appLocale)
     }
+
+    // DB
     private val mapper = Mapper()
 
     val albums: Flow<List<AlbumObject>> =
         dao.getAlbums().map { list -> list.map { mapper.fromDbAlbum(it)} }
+
+    fun getAlbumById(id: Int): Flow<AlbumObject?> =
+        dao.getAlbumById(id).map { album -> album?.let { mapper.fromDbAlbum(it) } }
 
     fun getAllPhotosFromAlbum(albumId: Int): Flow<List<PhotoObject>> =
         dao.getAllPhotosFromAlbum(albumId).map { list -> list.map { mapper.fromDbPhoto(it)} }
@@ -71,11 +87,6 @@ class MainViewModel (
         }
     }
 
-    fun updateAlbumColor(id: Int, color: Int) {
-        viewModelScope.launch {
-            dao.updateAlbumColor(id, color)
-        }
-    }
 
     fun updateAlbumColor(id: Int, color: Color) {
         val colorInt = mapper.fromColor(color)
@@ -110,7 +121,6 @@ class MainViewModel (
         }
     }
 
-    // 🔹 Delete photo
     fun deletePhoto(id: Int) {
         viewModelScope.launch {
             dao.deletePhotoById(id)

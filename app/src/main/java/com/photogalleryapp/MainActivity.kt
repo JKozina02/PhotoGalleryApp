@@ -10,12 +10,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.photogalleryapp.model.MainViewModel
 import com.photogalleryapp.model.MainViewModelFactory
 import com.photogalleryapp.ui.components.shared.BottomNavBar
 import com.photogalleryapp.ui.navigation.AppNavGraph
+import com.photogalleryapp.ui.theme.PhotoGalleryAppTheme
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels {
@@ -26,7 +29,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MaterialTheme {
+            val isDarkMode by mainViewModel.isDarkTheme.collectAsState()
+            PhotoGalleryAppTheme(darkTheme = isDarkMode) {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background

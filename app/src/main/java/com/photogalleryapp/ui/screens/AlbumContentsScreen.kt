@@ -22,8 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import androidx.compose.ui.res.stringResource
-import com.photogalleryapp.R
 import com.photogalleryapp.model.MainViewModel
 import com.photogalleryapp.model.PhotoObject
 import java.io.File
@@ -38,6 +36,12 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
         viewModel.getAllPhotosFromAlbum(albumId).collectAsState(initial = emptyList())
     } else {
         remember { mutableStateOf(emptyList()) }
+    }
+
+    val album by if (albumId != null) {
+        viewModel.getAlbumById(albumId).collectAsState(initial = null)
+    } else {
+        remember { mutableStateOf(null) }
     }
 
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
@@ -63,7 +67,7 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.album_title_template, albumId ?: 0)) },
+                title = { Text(album?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
