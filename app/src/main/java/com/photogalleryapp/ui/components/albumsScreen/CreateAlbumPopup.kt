@@ -57,7 +57,6 @@ fun CreateAlbumPopup(
             OutlinedTextField(
                 value = albumName,
                 onValueChange = { albumName = it },
-                label = { Text(stringResource(R.string.album_name_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -67,12 +66,6 @@ fun CreateAlbumPopup(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
             HorizontalDividerWithSubhead(stringResource(R.string.appearance_label))
-
-            Column {
-                Text(
-                    stringResource(R.string.highlight_color),
-                    fontWeight = FontWeight.Bold
-                )
 
                 GridColorPicker(
                     onColorSelected = {
@@ -85,10 +78,7 @@ fun CreateAlbumPopup(
             Column(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(
-                    stringResource(R.string.icon_label),
-                    fontWeight = FontWeight.Bold
-                )
+                HorizontalDividerWithSubhead(stringResource(R.string.icon_label))
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(6),
@@ -138,4 +128,3 @@ fun CreateAlbumPopup(
             }
         }
     }
-}

@@ -33,6 +33,7 @@ import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
@@ -54,7 +55,6 @@ fun AlbumPreviewComponent(
     val photos by viewModel.getPhotosFromAlbum(album.id ?: 0, 5).collectAsState(initial = emptyList())
     val firstPhoto = photos.firstOrNull()
 
-    // 1. Jawna animacja wysokości całego kafelka
     val animatedHeight by animateDpAsState(
         targetValue = if (isOpen) 350.dp else 120.dp,
         animationSpec = tween(durationMillis = 350),
@@ -63,7 +63,7 @@ fun AlbumPreviewComponent(
 
     Box(
         modifier = Modifier
-            .padding(vertical = 4.dp) // Usunięto horizontal padding
+            .padding(vertical = 4.dp)
             .clip(RoundedCornerShape(32.dp))
             .fillMaxWidth()
             .height(animatedHeight)
@@ -73,14 +73,14 @@ fun AlbumPreviewComponent(
                 onLongClick = { onLongClick(album) }
             )
     ) {
-        // 2. AnimatedContent zapewnia płynne przejście tła (zdjęcie -> karuzela)
         AnimatedContent(
             targetState = isOpen,
             transitionSpec = {
                 fadeIn(animationSpec = tween(350)) togetherWith fadeOut(animationSpec = tween(350))
             },
             label = "AlbumContentTransition"
-        ) { targetOpen ->
+        ) {
+            targetOpen ->
             if (targetOpen && photos.isNotEmpty()) {
                 val pagerState = rememberPagerState(pageCount = { photos.size })
                 HorizontalPager(
@@ -109,7 +109,6 @@ fun AlbumPreviewComponent(
             }
         }
 
-        // 3. Nakładka z animowanym paskiem górnym
         AlbumTopBar(
             albumName = album.name,
             albumColor = album.color,
@@ -132,6 +131,8 @@ fun AlbumTopBar(
         label = "TopBarPosition"
     )
 
+    val contentColor = if (albumColor.luminance() > 0.5f) Color.Black else Color.White
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,7 +150,7 @@ fun AlbumTopBar(
             if (isOpen) {
                 Text(
                     text = albumName,
-                    color = Color.Black,
+                    color = contentColor,
                     maxLines = 1,
                     modifier = Modifier.padding(end = 8.dp)
                 )
@@ -157,7 +158,7 @@ fun AlbumTopBar(
             }
             Icon(
                 imageVector = icon,
-                tint = Color.Black,
+                tint = contentColor,
                 modifier = Modifier.size(if (isOpen) 28.dp else 36.dp),
                 contentDescription = "Icon"
             )

@@ -60,11 +60,9 @@ fun AlbumEditorPopup(
             modifier = Modifier.padding(bottom = 8.dp)
         ) {
             HorizontalDividerWithSubhead(stringResource(R.string.name_label))
-
             OutlinedTextField(
                 value = draft.name,
                 onValueChange = { draft = draft.copy(name = it) },
-                label = { Text(stringResource(R.string.album_name_label)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -76,11 +74,6 @@ fun AlbumEditorPopup(
             HorizontalDividerWithSubhead(stringResource(R.string.appearance_label))
 
             Column {
-                Text(
-                    stringResource(R.string.highlight_color),
-                    fontWeight = FontWeight.Bold
-                )
-
                 GridColorPicker(
                     lastSelectedColor = draft.color,
                     onColorSelected = {
@@ -93,10 +86,7 @@ fun AlbumEditorPopup(
             Column(
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Text(
-                    stringResource(R.string.icon_label),
-                    fontWeight = FontWeight.Bold
-                )
+                HorizontalDividerWithSubhead(stringResource(R.string.icon_label))
 
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(6),
@@ -164,17 +154,17 @@ fun HorizontalDividerWithSubhead(
 }
 
 
-@Preview
-@Composable
-fun PreviewAlbumEditorPopup() {
-    var album = testAlbum0
-    ModalBottomSheet(onDismissRequest = { }) {
-        AlbumEditorPopup(
-            album,
-            { },
-            onSaveRequest = { updated ->
-                album = updated
-            }
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewAlbumEditorPopup() {
+//    var album = testAlbum0
+//    ModalBottomSheet(onDismissRequest = { }) {
+//        AlbumEditorPopup(
+//            album,
+//            { },
+//            onSaveRequest = { updated ->
+//                album = updated
+//            }
+//        )
+//    }
+//}
