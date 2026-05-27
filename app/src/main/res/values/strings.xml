@@ -22,4 +22,14 @@
     <string name="albums_tab">Albumy</string>
     <string name="search_tab">Szukaj</string>
     <string name="change_theme">Zmień motyw</string>
+    <string name="delete_photo">Usuń zdjęcie</string>
+    <string name="close">Zamknij</string>
+    <string name="delete_confirm_title">Czy na pewno usunąć?</string>
+    <string name="delete_confirm_msg">To zdjęcie zostanie trwale usunięte.</string>
+    <string name="delete">Usuń</string>
+    <string name="delete_album">Usuń album</string>
+    <string name="delete_album_confirm_title">Czy na pewno usunąć album?</string>
+    <string name="delete_album_confirm_msg">Wszystkie zdjęcia w tym albumie zostaną trwale usunięte.</string>
+    <string name="settings">Ustawienia</string>
+    <string name="licenses">Licencje bibliotek</string>
 </resources>

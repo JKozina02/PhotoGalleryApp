@@ -22,4 +22,14 @@
     <string name="albums_tab">Albums</string>
     <string name="search_tab">Search</string>
     <string name="change_theme">Change theme</string>
+    <string name="delete_photo">Delete photo</string>
+    <string name="close">Close</string>
+    <string name="delete_confirm_title">Do you want to delete photo?</string>
+    <string name="delete_confirm_msg">This photo will be removed forever.</string>
+    <string name="delete">Delete</string>
+    <string name="delete_album">Delete album</string>
+    <string name="delete_album_confirm_title">Delete album?</string>
+    <string name="delete_album_confirm_msg">All photos in this album will be permanently deleted.</string>
+    <string name="settings">Settings</string>
+    <string name="licenses">Library licenses</string>
 </resources>

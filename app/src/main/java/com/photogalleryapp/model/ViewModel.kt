@@ -1,6 +1,7 @@
 package com.photogalleryapp.model
 
 import android.content.Context
+import android.net.Uri
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.graphics.Color
 import androidx.core.os.LocaleListCompat
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.io.File
+import androidx.core.net.toUri
 
 class MainViewModelFactory (private val context: Context): ViewModelProvider.Factory{
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -24,13 +27,14 @@ class MainViewModelFactory (private val context: Context): ViewModelProvider.Fac
             ).build()
             val dao = db.databaseDao()
 
-            return MainViewModel(dao) as T
+            return MainViewModel(dao, context.applicationContext) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 class MainViewModel (
-    private val dao: DatabaseDao
+    private val dao: DatabaseDao,
+    private val context: Context
 ) : ViewModel() {
 
     // Dark Theme
@@ -104,6 +108,11 @@ class MainViewModel (
 
     fun deleteAlbum(id: Int) {
         viewModelScope.launch {
+
+            val photos = dao.getPhotosByAlbumIdDirect(id)
+            photos.forEach { photo ->
+                deletePhysicalFile(photo.uri)
+            }
             dao.deleteAlbumById(id)
         }
     }
@@ -123,7 +132,51 @@ class MainViewModel (
 
     fun deletePhoto(id: Int) {
         viewModelScope.launch {
+            val photo = dao.getPhotoByIdDirect(id)
+            photo?.let {
+                deletePhysicalFile(it.uri)
+            }
             dao.deletePhotoById(id)
+        }
+    }
+
+    private fun deletePhysicalFile(uriString: String) {
+        try {
+            val uri = uriString.toUri()
+            val fileProviderAuthority = "${context.packageName}.fileprovider"
+
+            when (uri.scheme) {
+                "content" -> {
+                    if (uri.authority == fileProviderAuthority) {
+                        context.contentResolver.delete(uri, null, null)
+                        android.util.Log.d("MainViewModel", "Fizycznie usunięto plik z folderu aplikacji: $uriString")
+                    } else {
+                        android.util.Log.d("MainViewModel", "Usunięto tylko wpis w bazie danych. Plik na dysku pozostaje bezpieczny: $uriString")
+                    }
+                }
+                "file" -> {
+                    val path = uri.path
+                    if (path != null) {
+                        val file = File(path)
+                        val absPath = file.absolutePath
+
+                        val internalRoot = context.applicationInfo.dataDir
+                        val externalRoot = context.getExternalFilesDir(null)?.absolutePath?.substringBefore("/files")
+
+                        val isInternal = absPath.startsWith(internalRoot)
+                        val isExternal = externalRoot?.let { absPath.startsWith(it) } ?: false
+                        
+                        if ((isInternal || isExternal) && file.exists()) {
+                            file.delete()
+                            android.util.Log.d("MainViewModel", "Fizycznie usunięto plik z folderu aplikacji: $absPath")
+                        } else {
+                            android.util.Log.d("MainViewModel", "Usunięto tylko wpis w bazie danych. Plik na dysku pozostaje bezpieczny: $absPath")
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("MainViewModel", "Błąd podczas usuwania: $uriString", e)
         }
     }
 

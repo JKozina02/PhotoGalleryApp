@@ -104,6 +104,12 @@ interface DatabaseDao{
     @Query("SELECT * FROM Photo WHERE albumId IN (:albumID) LIMIT (:count)")
     fun getPhotosFromAlbum(albumID: Int, count: Int): Flow<List<Photo>>
 
+    @Query("SELECT * FROM Photo WHERE albumId = :albumID")
+    suspend fun getPhotosByAlbumIdDirect(albumID: Int): List<Photo>
+
+    @Query("SELECT * FROM Photo WHERE id = :id")
+    suspend fun getPhotoByIdDirect(id: Int): Photo?
+
     @Query("UPDATE Album SET color = :color WHERE id = :id")
     suspend fun updateAlbumColor(id: Int, color: Int)
 

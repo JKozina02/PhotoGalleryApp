@@ -1,10 +1,12 @@
 package com.photogalleryapp.ui.screens
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -13,18 +15,24 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.photogalleryapp.R
 import com.photogalleryapp.model.MainViewModel
 import com.photogalleryapp.model.PhotoObject
 import java.io.File
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,11 +53,21 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
     }
 
     var tempImageUri by remember { mutableStateOf<Uri?>(null) }
+    var showDeleteAlbumDialog by remember { mutableStateOf(false) }
 
     val photoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia()
     ) { uri ->
         uri?.let {
+            try {
+                context.contentResolver.takePersistableUriPermission(
+                    it,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
             if (albumId != null) {
                 viewModel.insertPhoto(PhotoObject(albumId = albumId, uri = it))
             }
@@ -64,6 +82,32 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
         }
     }
 
+    if (showDeleteAlbumDialog) {
+        AlertDialog(
+            onDismissRequest = { showDeleteAlbumDialog = false },
+            title = { Text(stringResource(R.string.delete_album_confirm_title)) },
+            text = { Text(stringResource(R.string.delete_album_confirm_msg)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        if (albumId != null) {
+                            viewModel.deleteAlbum(albumId)
+                            showDeleteAlbumDialog = false
+                            navController.popBackStack()
+                        }
+                    }
+                ) {
+                    Text(stringResource(R.string.delete), color = Color.Red)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteAlbumDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -73,6 +117,14 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = null
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { showDeleteAlbumDialog = true }) {
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = stringResource(R.string.delete_album)
                         )
                     }
                 }
@@ -117,7 +169,11 @@ fun AlbumContentsScreen(albumId: Int?, viewModel: MainViewModel, navController: 
                     contentDescription = null,
                     modifier = Modifier
                         .aspectRatio(1f)
-                        .fillMaxSize(),
+                        .fillMaxSize()
+                        .clickable {
+                            val encodedUri = URLEncoder.encode(photo.uri.toString(), StandardCharsets.UTF_8.toString())
+                            navController.navigate("FullScreenImage/${photo.id}/$encodedUri")
+                        },
                     contentScale = ContentScale.Crop
                 )
             }
