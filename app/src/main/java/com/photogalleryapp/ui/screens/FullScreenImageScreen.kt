@@ -1,6 +1,5 @@
 package com.photogalleryapp.ui.screens
 
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -11,12 +10,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import com.photogalleryapp.R
 import com.photogalleryapp.model.MainViewModel
 import androidx.core.net.toUri
+import android.provider.OpenableColumns
+import android.graphics.BitmapFactory
+import androidx.compose.ui.unit.dp
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,6 +32,7 @@ fun FullScreenImageScreen(
     navController: NavHostController
 ) {
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showPhotoInformationDialog by remember { mutableStateOf(false) }
 
     if (showDeleteDialog) {
         AlertDialog(
@@ -51,7 +57,67 @@ fun FullScreenImageScreen(
             }
         )
     }
+    if (showPhotoInformationDialog) {
+        val context = LocalContext.current
+        val uri = photoUri.toUri()
+        
+        var name by remember { mutableStateOf("Unknown") }
+        var size by remember { mutableStateOf("Unknown") }
+        var type by remember { mutableStateOf("Unknown") }
+        var resolution by remember { mutableStateOf<Pair<Int, Int>?>(null) }
 
+        LaunchedEffect(uri) {
+            try {
+                context.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    if (cursor.moveToFirst()) {
+                        if (nameIndex != -1) name = cursor.getString(nameIndex) ?: "Unknown"
+                        if (sizeIndex != -1) {
+                            val sizeBytes = cursor.getLong(sizeIndex)
+                            size = formatFileSize(sizeBytes)
+                        }
+                    }
+                }
+                type = context.contentResolver.getType(uri) ?: "Unknown"
+
+                context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                    val options = BitmapFactory.Options().apply {
+                        inJustDecodeBounds = true
+                    }
+                    BitmapFactory.decodeStream(inputStream, null, options)
+                    if (options.outWidth != -1 && options.outHeight != -1) {
+                        resolution = Pair(options.outWidth, options.outHeight)
+                    }
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("FullScreenImage", "Error fetching photo info", e)
+            }
+        }
+
+        AlertDialog(
+            onDismissRequest = { showPhotoInformationDialog = false },
+            title = { Text(stringResource(R.string.photo_info_title)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.photo_info_name, name))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(stringResource(R.string.photo_info_size, size))
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(stringResource(R.string.photo_info_type, type))
+                    resolution?.let { (width, height) ->
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(stringResource(R.string.photo_info_resolution, width, height))
+                    }
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showPhotoInformationDialog = false }) {
+                    Text(stringResource(R.string.close))
+                }
+            }
+        )
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -62,6 +128,9 @@ fun FullScreenImageScreen(
                     }
                 },
                 actions = {
+                    IconButton(onClick = { showPhotoInformationDialog = true }) {
+                        Icon(Icons.Default.Info, contentDescription = stringResource(R.string.info))
+                    }
                     IconButton(onClick = { showDeleteDialog = true }) {
                         Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete_photo))
                     }
@@ -89,4 +158,11 @@ fun FullScreenImageScreen(
             )
         }
     }
+}
+
+fun formatFileSize(size: Long): String {
+    if (size <= 0) return "0 B"
+    val units = arrayOf("B", "KB", "MB", "GB", "TB")
+    val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+    return String.format(Locale.US, "%.1f %s", size / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
 }

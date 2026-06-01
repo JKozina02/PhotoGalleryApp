@@ -25,11 +25,17 @@
     <string name="delete_photo">Usuń zdjęcie</string>
     <string name="close">Zamknij</string>
     <string name="delete_confirm_title">Czy na pewno usunąć?</string>
-    <string name="delete_confirm_msg">To zdjęcie zostanie trwale usunięte.</string>
+    <string name="delete_confirm_msg">To zdjęcie zostanie usunięte z aplikacji..</string>
     <string name="delete">Usuń</string>
     <string name="delete_album">Usuń album</string>
     <string name="delete_album_confirm_title">Czy na pewno usunąć album?</string>
-    <string name="delete_album_confirm_msg">Wszystkie zdjęcia w tym albumie zostaną trwale usunięte.</string>
+    <string name="delete_album_confirm_msg">Wszystkie zdjęcia w tym albumie zostaną usunięte z aplikacji.</string>
     <string name="settings">Ustawienia</string>
     <string name="licenses">Licencje bibliotek</string>
+    <string name="photo_info_title">Informacje o zdjęciu</string>
+    <string name="photo_info_name">Nazwa: %1$s</string>
+    <string name="photo_info_size">Rozmiar: %1$s</string>
+    <string name="photo_info_type">Typ: %1$s</string>
+    <string name="photo_info_resolution">Rozdzielczość: %1$d × %2$d</string>
+    <string name="info">Info</string>
 </resources>

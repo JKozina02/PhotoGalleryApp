@@ -25,11 +25,17 @@
     <string name="delete_photo">Delete photo</string>
     <string name="close">Close</string>
     <string name="delete_confirm_title">Do you want to delete photo?</string>
-    <string name="delete_confirm_msg">This photo will be removed forever.</string>
+    <string name="delete_confirm_msg">This photo will be removed from app.</string>
     <string name="delete">Delete</string>
     <string name="delete_album">Delete album</string>
     <string name="delete_album_confirm_title">Delete album?</string>
-    <string name="delete_album_confirm_msg">All photos in this album will be permanently deleted.</string>
+    <string name="delete_album_confirm_msg">All photos in this album will be removed from app.</string>
     <string name="settings">Settings</string>
     <string name="licenses">Library licenses</string>
+    <string name="photo_info_title">Photo Information</string>
+    <string name="photo_info_name">Name: %1$s</string>
+    <string name="photo_info_size">Size: %1$s</string>
+    <string name="photo_info_type">Type: %1$s</string>
+    <string name="photo_info_resolution">Resolution: %1$d × %2$d</string>
+    <string name="info">Info</string>
 </resources>
